@@ -109,3 +109,18 @@ This should leave you with a `csv` directory that looks something like:
     ----------| -----------------------------------------------------------------..
     4887398   | NA             US               IL                               ..
     2778067   | EU             AT               6                                ..
+    
+    / name column dictionaries are keyed by locale
+    q)first select from r`geoname_id
+    continent_code        | `NA
+    country_iso_code      | `US
+    subdivision_1_iso_code| `IL
+    subdivision_2_iso_code| `
+    metro_code            | "602"
+    time_zone             | `America/Chicago
+    is_in_european_union  | 0b
+    continent_name        | `de`en`es`fr`ja`pt-BR`ru`zh-CN!`Nordamerika`North Ame..
+    country_name          | `de`en`es`fr`ja`pt-BR`ru`zh-CN!`Vereinigte Staaten`Un..
+    subdivision_1_name    | `de`en`es`fr`ja`pt-BR`ru`zh-CN!("";"Illinois";"Illino..
+    subdivision_2_name    | `de`en`es`fr`ja`pt-BR`ru`zh-CN!("";"";"";"";"";"";"";..
+    city_name             | `de`en`es`fr`ja`pt-BR`ru`zh-CN!("Chicago";"Chicago";"..
