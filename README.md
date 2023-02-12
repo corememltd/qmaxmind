@@ -1,4 +1,4 @@
-kdb+/`q` Maxmind Library.
+kdb+/`q` Geolocation Maxmind Library.
 
 This project provides a native `q` implementation (ie. non-C binding) that uses the CSV databases from Maxmind.
 

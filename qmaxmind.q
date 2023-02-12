@@ -1,4 +1,4 @@
-/ kdb+/q Maxmind Library
+/ kdb+/q Geolocation Maxmind Library
 / Copyright (C) 2023, coreMem Limited <info@coremem.com>
 / SPDX-License-Identifier: AGPL-3.0-only
 
