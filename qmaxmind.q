@@ -7,11 +7,14 @@
 / x=mask[int/byte] y=ipv6[boolean]
 frommask:{(((128-o)div 8)#0x00),$[0=v:o mod 8;();"x"$-1+"i"$2 xexp v],((o:$[y;128;32]-x)div 8)#0xff}
 
+/ cast byte representation of an IPv6 address into a GUID
 frombyte:{"G"$"-"sv 0 8 12 16 20 cut raze string x}
 
+/ takes a CIDR in string format and returns a dict describing it
 fromcidr:{
  flip`addrlast`addr`mask`ipv6!flip{[x;y](frombyte(0x00 vs x)|frommask[m;v];x:"G"$x;y:"x"$m:"I"$y;v:count[x]>x?":")}.'"/"vs/:x}
 
+/ user function that attempts to parse anything into a IPv6 GUID
 toaddr:{
  c:{"G"$"00000000-0000-0000-0000-ffff",raze string x};
  $[-2=t:type x;x;
