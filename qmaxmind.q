@@ -21,11 +21,6 @@ toaddr:{
   -6=t;c 0x00 vs x;		/ int
   0Ng]}
 
-tomask:{
- $[-4h=t:type x;x;
-  10=t;"x"$"H"$last"/"vs x;
-  0x00]}
-
 files:{l where(l:string key hsym`$x)like y}
 
 loadasn:{
