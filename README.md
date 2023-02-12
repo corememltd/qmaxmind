@@ -1,8 +1,8 @@
 kdb+/`q` Maxmind Library.
 
-This project provides a native `q` implementation (ie. non-C binding) that processes the CSV databases from Maxmind.
+This project provides a native `q` implementation (ie. non-C binding) that uses the CSV databases from Maxmind.
 
-Both IPv4 and IPv6 is supported using GUID as the internal format which since kdb+/`q` version 3.6 release 2017.09.26 the following is supported
+Both IPv4 and IPv6 is supported by using GUID as the internal address format (supported in kdb+/`q` version 3.6 since release 2017.09.26):
 
     q)"G"$/:("2001:db8:85a3::8a2e:0370:7334";"192.0.2.125")
     20010db8-85a3-0000-0000-8a2e03707334 00000000-0000-0000-0000-ffffc000027d
@@ -51,27 +51,61 @@ This should leave you with a `csv` directory that looks something like:
 # Usage
 
     q)\l qmaxmind.q
-    q).qmaxmind.loadasn"csv"
     
-    q)meta .qmaxmind.asndb
-    c   | t f             a
-    ----| -----------------
-    last| g               s
-    addr| g                
-    mask| x                
-    ipv6| b                
-    asn | i .qmaxmind.asn  
+    q)\t .qmaxmind.loadasn"csv"
+    2962
     
-    q)first .qmaxmind.asndb
-    last| 00000000-0000-0000-0000-ffff010000ff
-    addr| 00000000-0000-0000-0000-ffff01000000
-    mask| 0x18
-    ipv6| 0b
-    asn | `.qmaxmind.asn$13335i
+    q)\t .qmaxmind.loadgeo"csv"	/ country database
+    3817
     
-    q)last .qmaxmind.asndb
-    last| 2c0fffd8-ffff-ffff-ffff-ffffffffffff
-    addr| 2c0fffd8-0000-0000-0000-000000000000
-    mask| 0x20
-    ipv6| 1b
-    asn | `.qmaxmind.asn$37105i
+    q)\t .qmaxmind.loadgeo"csv"	/ city database
+    28198
+
+## ASN
+
+    q).qmaxmind.asnip "G"$"2201:123::1"
+    org     | "Korea Telecom"
+    addrlast| 00000000-0000-0000-0000-ffff0216e7ff
+    addr    | 00000000-0000-0000-0000-ffff0216e700
+    mask    | 0x18
+    ipv6    | 0b
+    asn     | `.qmaxmind.asn$34164i
+    
+    q).qmaxmind.asnip("G"$"2201:123::1";"G"$"188.23.1.6")
+    org             addrlast                             addr                    ..
+    -----------------------------------------------------------------------------..
+    "Korea Telecom" 00000000-0000-0000-0000-ffff0216e7ff 00000000-0000-0000-0000-..
+    "RCS & RDS"     00000000-0000-0000-0000-ffff053908ff 00000000-0000-0000-0000-..
+    
+# Geolocation
+
+    q).qmaxmind.geoip "G"$"2201:123::1"
+    geoname_id                    | `.qmaxmind.geoloc$6535113i
+    registered_country_geoname_id | `.qmaxmind.geoloc$3175395i
+    represented_country_geoname_id| `.qmaxmind.geoloc$0Ni
+    is_anonymous_proxy            | 0b
+    is_satellite_provider         | 0b
+    postal_code                   | "22070"
+    latitude                      | 45.8089e
+    longitude                     | 8.9346e
+    accuracy_radius               | 50i
+    addrlast                      | 00000000-0000-0000-0000-ffff02248aff
+    addr                          | 00000000-0000-0000-0000-ffff02248a00
+    mask                          | 0x18
+    ipv6                          | 0b
+    continent_code                | `AS
+    country_iso_code              | `KR
+    subdivision_1_iso_code        | `
+    subdivision_2_iso_code        | `
+    metro_code                    | ""
+    time_zone                     | `Asia/Seoul
+    is_in_european_union          | 0b
+    continent_name                | `de`en`es`fr`ja`pt-BR`ru`zh-CN!`Asien`Asia`As..
+    country_name                  | `de`en`es`fr`ja`pt-BR`ru`zh-CN!`Südkorea`Sou..
+    ..
+    
+    q).qmaxmind.geoip("G"$"2201:123::1";"G"$"188.23.1.6")
+    geoname_id registered_country_geoname_id represented_country_geoname_id is_an..
+    -----------------------------------------------------------------------------..
+    6535113    3175395                                                      0    ..
+    4440076    6252001                                                      0    ..
