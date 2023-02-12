@@ -11,8 +11,7 @@ frommask:{(((128-o)div 8)#0x00),$[0=v:o mod 8;();"x"$-1+"i"$2 xexp v],((o:$[y;12
 frombyte:{"G"$"-"sv 0 8 12 16 20 cut raze string x}
 
 / takes a CIDR in string format and returns a dict describing it
-fromcidr:{
- flip`addrlast`addr`mask`ipv6!flip{[x;y](frombyte(0x00 vs x)|frommask[m;v];x:"G"$x;y:"x"$m:"I"$y;v:count[x]>x?":")}.'"/"vs/:x}
+fromcidr:{flip`addrlast`addr`mask`ipv6!flip{[x;y](frombyte(0x00 vs x)|frommask[m;v];x:"G"$x;y:"x"$m:"I"$y;v:count[x]>x?":")}.'"/"vs/:x}
 
 / user function that attempts to parse anything into a IPv6 GUID
 toaddr:{
