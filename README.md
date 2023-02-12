@@ -56,10 +56,10 @@ This should leave you with a `csv` directory that looks something like:
     q)\t .qmaxmind.loadasn"csv"
     2962
     
-    q)\t .qmaxmind.loadgeo"csv"	/ country database
+    q)\t .qmaxmind.loadgeo"csv"	/ only country database present
     3817
     
-    q)\t .qmaxmind.loadgeo"csv"	/ city database
+    q)\t .qmaxmind.loadgeo"csv"	/ city database present
     28198
 
 ## ASN
