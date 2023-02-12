@@ -11,6 +11,7 @@ Both IPv4 and IPv6 is supported by using GUID as the internal address format (su
 
  * [Poorman's geoIP lookups for kdb+/q using Maxmind's (CSV) GeoIP database](https://gist.github.com/jimdigriz/2dd4b249d2e3f24d8838f6466674f945)
  * [Developing with kdb+ and the q language](https://code.kx.com/q/)
+    * [Step dictionaries](https://code.kx.com/q/ref/apply/#step-dictionaries)
  * [Maxmind](https://maxmind.com/)
     * [GeoLite2 Free Geolocation Data](https://dev.maxmind.com/geoip/geolite2-free-geolocation-data)
 
@@ -64,48 +65,47 @@ This should leave you with a `csv` directory that looks something like:
 ## ASN
 
     q).qmaxmind.asnip "G"$"2201:123::1"
-    org     | "Korea Telecom"
-    addrlast| 00000000-0000-0000-0000-ffff0216e7ff
-    addr    | 00000000-0000-0000-0000-ffff0216e700
-    mask    | 0x18
-    ipv6    | 0b
-    asn     | `.qmaxmind.asn$34164i
+    addr| 20498e02-f000-0000-0000-000000000000
+    mask| 0x24
+    ipv6| 1b
+    asn | `.qmaxmind.asn$38019i
     
-    q).qmaxmind.asnip("G"$"2201:123::1";"G"$"188.23.1.6")
-    org             addrlast                             addr                    ..
-    -----------------------------------------------------------------------------..
-    "Korea Telecom" 00000000-0000-0000-0000-ffff0216e7ff 00000000-0000-0000-0000-..
-    "RCS & RDS"     00000000-0000-0000-0000-ffff053908ff 00000000-0000-0000-0000-..
+    q)r:.qmaxmind.asnip("G"$"2201:123::1";"G"$"188.23.1.6");r
+    addr                                 mask ipv6 asn
+    ----------------------------------------------------
+    20498e02-f000-0000-0000-000000000000 24   1    38019
+    00000000-0000-0000-0000-ffffbc160000 0f   0    8447
     
+    q)select from r`asn
+    num  | org
+    -----| ----------------------------------------------
+    38019| "tianjin Mobile Communication Company Limited"
+    8447 | "A1 Telekom Austria AG"
+
 # Geolocation
 
     q).qmaxmind.geoip "G"$"2201:123::1"
-    geoname_id                    | `.qmaxmind.geoloc$6535113i
-    registered_country_geoname_id | `.qmaxmind.geoloc$3175395i
+    geoname_id                    | `.qmaxmind.geoloc$4887398i
+    registered_country_geoname_id | `.qmaxmind.geoloc$0Ni
     represented_country_geoname_id| `.qmaxmind.geoloc$0Ni
     is_anonymous_proxy            | 0b
     is_satellite_provider         | 0b
-    postal_code                   | "22070"
-    latitude                      | 45.8089e
-    longitude                     | 8.9346e
-    accuracy_radius               | 50i
-    addrlast                      | 00000000-0000-0000-0000-ffff02248aff
-    addr                          | 00000000-0000-0000-0000-ffff02248a00
-    mask                          | 0x18
-    ipv6                          | 0b
-    continent_code                | `AS
-    country_iso_code              | `KR
-    subdivision_1_iso_code        | `
-    subdivision_2_iso_code        | `
-    metro_code                    | ""
-    time_zone                     | `Asia/Seoul
-    is_in_european_union          | 0b
-    continent_name                | `de`en`es`fr`ja`pt-BR`ru`zh-CN!`Asien`Asia`As..
-    country_name                  | `de`en`es`fr`ja`pt-BR`ru`zh-CN!`Südkorea`Sou..
-    ..
+    postal_code                   | "60602"
+    latitude                      | 41.8874e
+    longitude                     | -87.6318e
+    accuracy_radius               | 100i
+    addr                          | 21600150-0000-0000-0000-000000000000
+    mask                          | 0x21
+    ipv6                          | 1b
     
-    q).qmaxmind.geoip("G"$"2201:123::1";"G"$"188.23.1.6")
+    q)r:.qmaxmind.geoip("G"$"2201:123::1";"G"$"188.23.1.6");r
     geoname_id registered_country_geoname_id represented_country_geoname_id is_an..
     -----------------------------------------------------------------------------..
-    6535113    3175395                                                      0    ..
-    4440076    6252001                                                      0    ..
+    4887398                                                                 0    ..
+    2778067    2782113                                                      0    ..
+    
+    q)select from r`geoname_id
+    geoname_id| continent_code country_iso_code subdivision_1_iso_code subdivisio..
+    ----------| -----------------------------------------------------------------..
+    4887398   | NA             US               IL                               ..
+    2778067   | EU             AT               6                                ..

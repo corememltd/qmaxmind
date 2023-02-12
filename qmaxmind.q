@@ -29,9 +29,8 @@ files:{l where(l:string key hsym`$x)like y}
 loadasn:{
  db:raze{[x;f]("*I*";enlist",")0:hsym`$x,"/",f}[x]each files[x;"GeoLite2-ASN-Blocks-IPv[46].csv"];
  asn::`num xkey`num xasc select distinct num:autonomous_system_number, org:autonomous_system_organization from db;
- asndb::`addrlast xasc delete network, autonomous_system_number, autonomous_system_organization from update asn:`.qmaxmind.asn$db`autonomous_system_number from db + .qmaxmind.fromcidr db`network}
-
-asnip:{(.qmaxmind.asn each i)+.qmaxmind.asndb each i:(.qmaxmind.asndb binr[.qmaxmind.asndb`addrlast;x])`asn}
+ asndb:`addrlast xasc delete network, autonomous_system_number, autonomous_system_organization from update asn:`.qmaxmind.asn$db`autonomous_system_number from db + .qmaxmind.fromcidr db`network;
+ asnip::{`s#(y x)!enlist[x]_y}[`addrlast;asndb]}
 
 loadgeo:{
  t:$[any(string key hsym`$x)like"GeoLite2-City-Blocks-IPv[46].csv";"City";"Country"];
@@ -42,8 +41,7 @@ loadgeo:{
  geoloc::`geoname_id xkey`geoname_id xasc $[t like"City";
   select continent_name:locale_code!continent_name, country_name:locale_code!country_name, subdivision_1_name:locale_code!subdivision_1_name, subdivision_2_name:locale_code!subdivision_2_name, city_name:locale_code!city_name by geoname_id, continent_code, country_iso_code, subdivision_1_iso_code, subdivision_2_iso_code, metro_code, time_zone, is_in_european_union from loc;
   select continent_name:locale_code!continent_name, country_name:locale_code!country_name by geoname_id, continent_code, country_iso_code, is_in_european_union from loc];
- geodb::`addrlast xasc delete network from update geoname_id:`.qmaxmind.geoloc$db`geoname_id, registered_country_geoname_id:`.qmaxmind.geoloc$db`registered_country_geoname_id, represented_country_geoname_id:`.qmaxmind.geoloc$db`represented_country_geoname_id from db + .qmaxmind.fromcidr db`network}
-
-geoip:{(.qmaxmind.geodb each i)+.qmaxmind.geoloc each i:(.qmaxmind.geodb binr[.qmaxmind.geodb`addrlast;x])`geoname_id}
+ geodb::`addrlast xasc delete network from update geoname_id:`.qmaxmind.geoloc$db`geoname_id, registered_country_geoname_id:`.qmaxmind.geoloc$db`registered_country_geoname_id, represented_country_geoname_id:`.qmaxmind.geoloc$db`represented_country_geoname_id from db + .qmaxmind.fromcidr db`network;
+ geoip::{`s#(y x)!enlist[x]_y}[`addrlast;geodb]}
 
 \d .
