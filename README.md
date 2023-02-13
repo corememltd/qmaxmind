@@ -11,7 +11,6 @@ Both IPv4 and IPv6 is supported by using GUID as the internal address format (su
 
  * [Poorman's geoIP lookups for kdb+/q using Maxmind's (CSV) GeoIP database](https://gist.github.com/jimdigriz/2dd4b249d2e3f24d8838f6466674f945)
  * [Developing with kdb+ and the q language](https://code.kx.com/q/)
-    * [Step dictionaries](https://code.kx.com/q/ref/apply/#step-dictionaries)
  * [Maxmind](https://maxmind.com/)
     * [GeoLite2 Free Geolocation Data](https://dev.maxmind.com/geoip/geolite2-free-geolocation-data)
 
@@ -131,3 +130,15 @@ This should leave you with a `csv` directory that looks something like:
     subdivision_1_name    | `de`en`es`fr`ja`pt-BR`ru`zh-CN!("";"";"";"";"";"";"";..
     subdivision_2_name    | `de`en`es`fr`ja`pt-BR`ru`zh-CN!("";"";"";"";"";"";"";..
     city_name             | `de`en`es`fr`ja`pt-BR`ru`zh-CN!("";"";"";"";"";"";"";..
+
+## Raw Data
+
+The raw imported data is accessible via the following:
+
+    q)first select from value .qmaxmind.asndb
+    q)first select from .qmaxmind.asn
+    
+    q)first select from value .qmaxmind.geodb
+    q)first select from .qmaxmind.geoloc
+
+**N.B.** for the main databases we use [step dictionaries](https://code.kx.com/q/ref/apply/#step-dictionaries) as an accessor
