@@ -11,7 +11,7 @@ frommask:{(((128-o)div 8)#0x00),$[0=v:o mod 8;();"x"$-1+"i"$2 xexp v],((o:$[y;12
 frombyte:{"G"$"-"sv 0 8 12 16 20 cut raze string x}
 
 / takes a CIDR in string format and returns a dict describing it
-/ 0b sv'(0b vs'0x2a020390900000000000000000000000)|(0b vs'0x0000000003ffffffffffffffffffffff)
+/ 0b sv'(0b vs'0x20010db8000000000000000000000000)|(0b vs'0x0000000003ffffffffffffffffffffff)
 fromcidr:{flip`addrlast`addr`mask!flip{[x;y](frombyte 0b sv'(0b vs'0x00 vs a)|0b vs'frommask[m;count[x]>x?":"];a:"G"$x;"x"$m:"I"$y)}.'"/"vs/:x}
 
 / user function that attempts to parse anything into a IPv6 GUID
@@ -34,6 +34,7 @@ loadasn:{
 
 loadgeo:{
  t:$[any(string key hsym`$x)like"GeoLite2-City-Blocks-IPv[46].csv";"City";"Country"];
+ / https://dev.maxmind.com/geoip/docs/databases/city-and-country?lang=en#csv-databases
  c:("Country";"City")!(`blk`loc!("*IIIBB";"ISSSSSB");`blk`loc!("*IIIBB*EEH";"ISSSSSS*S***SB"));
  r:{[x;m;f](m;enlist",")0:hsym`$x,"/",f}[x];
  db:raze r[(c t)`blk]each files[x;"GeoLite2-",t,"-Blocks-IPv[46].csv"];
