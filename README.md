@@ -54,73 +54,80 @@ This should leave you with a `csv` directory that looks something like:
     q)\l qmaxmind.q
     
     q)\t .qmaxmind.loadasn"csv"
-    2962
+    6686
     
     q)\t .qmaxmind.loadgeo"csv"	/ only country database present
-    3817
+    7696
     
     q)\t .qmaxmind.loadgeo"csv"	/ city database present
-    28198
+    63737
+
+**N.B.** database loads are *really* slow as kdb+/`q` has no GUID (128-bit) math functions or bitwise operators
 
 ## ASN
 
-    q).qmaxmind.asnip "G"$"2201:123::1"
-    addr| 20498e02-f000-0000-0000-000000000000
-    mask| 0x24
-    ipv6| 1b
-    asn | `.qmaxmind.asn$38019i
+    q).qmaxmind.asnip "G"$"2a02:10::1"
+    addrlast| 2a020010-00ff-ffff-ffff-ffffffffffff
+    addr    | 2a020010-0000-0000-0000-000000000000
+    mask    | 0x28
+    asn     | `.qmaxmind.asn$24785i
     
-    q)r:.qmaxmind.asnip("G"$"2201:123::1";"G"$"188.23.1.6");r
-    addr                                 mask ipv6 asn
-    ----------------------------------------------------
-    20498e02-f000-0000-0000-000000000000 24   1    38019
-    00000000-0000-0000-0000-ffffbc160000 0f   0    8447
+    / returns null when no location data (ie. rfc1918, bogon, ...)
+    q)r:.qmaxmind.asnip("G"$"2a02:10::1";"G"$"188.23.1.6";"G"$"192.0.2.1");r
+    addrlast                             addr                                 mas..
+    -----------------------------------------------------------------------------..
+    2a020010-00ff-ffff-ffff-ffffffffffff 2a020010-0000-0000-0000-000000000000 28 ..
+    00000000-0000-0000-0000-ffffbc17ffff 00000000-0000-0000-0000-ffffbc160000 0f ..
+    00000000-0000-0000-0000-000000000000 00000000-0000-0000-0000-000000000000 00 ..
     
     q)select from r`asn
     num  | org
     -----| ----------------------------------------------
     38019| "tianjin Mobile Communication Company Limited"
     8447 | "A1 Telekom Austria AG"
+         | ""
 
 # Geolocation
 
-    q).qmaxmind.geoip "G"$"2201:123::1"
-    geoname_id                    | `.qmaxmind.geoloc$4887398i
-    registered_country_geoname_id | `.qmaxmind.geoloc$0Ni
+    q).qmaxmind.geoip "G"$"2a02:10::1"
+    geoname_id                    | `.qmaxmind.geoloc$2750405i
+    registered_country_geoname_id | `.qmaxmind.geoloc$2750405i
     represented_country_geoname_id| `.qmaxmind.geoloc$0Ni
     is_anonymous_proxy            | 0b
     is_satellite_provider         | 0b
-    postal_code                   | "60602"
-    latitude                      | 41.8874e
-    longitude                     | -87.6318e
-    accuracy_radius               | 100i
-    addr                          | 21600150-0000-0000-0000-000000000000
-    mask                          | 0x21
-    ipv6                          | 1b
-    
-    q)r:.qmaxmind.geoip("G"$"2201:123::1";"G"$"188.23.1.6");r
+    postal_code                   | ""
+    latitude                      | 52.3824e
+    longitude                     | 4.8995e
+    accuracy_radius               | 100h
+    addrlast                      | 2a020017-ffff-ffff-ffff-ffffffffffff
+    addr                          | 2a020010-0000-0000-0000-000000000000
+    mask                          | 0x1d
+
+    / returns null when no location data (ie. rfc1918, bogon, ...)
+    q)r:.qmaxmind.geoip("G"$"2a02:10::1";"G"$"188.23.1.6";"G"$"192.0.2.1");r
     geoname_id registered_country_geoname_id represented_country_geoname_id is_an..
     -----------------------------------------------------------------------------..
-    4887398                                                                 0    ..
-    2778067    2782113                                                      0    ..
-    
+    2750405    2750405                                                      0    ..
+    2761369    2782113                                                      0    ..
+                                                                            1    ..
     q)select from r`geoname_id
     geoname_id| continent_code country_iso_code subdivision_1_iso_code subdivisio..
     ----------| -----------------------------------------------------------------..
     4887398   | NA             US               IL                               ..
     2778067   | EU             AT               6                                ..
+              |                                                                  ..
     
     / name column dictionaries are keyed by locale
     q)first select from r`geoname_id
-    continent_code        | `NA
-    country_iso_code      | `US
-    subdivision_1_iso_code| `IL
+    continent_code        | `EU
+    country_iso_code      | `NL
+    subdivision_1_iso_code| `
     subdivision_2_iso_code| `
-    metro_code            | "602"
-    time_zone             | `America/Chicago
-    is_in_european_union  | 0b
-    continent_name        | `de`en`es`fr`ja`pt-BR`ru`zh-CN!`Nordamerika`North Ame..
-    country_name          | `de`en`es`fr`ja`pt-BR`ru`zh-CN!`Vereinigte Staaten`Un..
-    subdivision_1_name    | `de`en`es`fr`ja`pt-BR`ru`zh-CN!("";"Illinois";"Illino..
+    metro_code            | 0Nh
+    time_zone             | `Europe/Amsterdam
+    is_in_european_union  | 1b
+    continent_name        | `de`en`es`fr`ja`pt-BR`ru`zh-CN!`Europa`Europe`Europa`..
+    country_name          | `de`en`es`fr`ja`pt-BR`ru`zh-CN!`Niederlande`Netherlan..
+    subdivision_1_name    | `de`en`es`fr`ja`pt-BR`ru`zh-CN!("";"";"";"";"";"";"";..
     subdivision_2_name    | `de`en`es`fr`ja`pt-BR`ru`zh-CN!("";"";"";"";"";"";"";..
-    city_name             | `de`en`es`fr`ja`pt-BR`ru`zh-CN!("Chicago";"Chicago";"..
+    city_name             | `de`en`es`fr`ja`pt-BR`ru`zh-CN!("";"";"";"";"";"";"";..
