@@ -12,7 +12,7 @@ frombyte:{"G"$"-"sv 0 8 12 16 20 cut raze string x}
 
 / takes a CIDR in string format and returns a dict describing it
 / 0b sv'(0b vs'0x2a020390900000000000000000000000)|(0b vs'0x0000000003ffffffffffffffffffffff)
-fromcidr:{flip`addrlast`addr`mask`ipv6!flip{[x;y](frombyte 0b sv'(0b vs'0x00 vs x)|0b vs'frommask[m;v];x:"G"$x;y:"x"$m:"I"$y;v:count[x]>x?":")}.'"/"vs/:x}
+fromcidr:{flip`addrlast`addr`mask!flip{[x;y](frombyte 0b sv'(0b vs'0x00 vs a)|0b vs'frommask[m;count[x]>x?":"];a:"G"$x;"x"$m:"I"$y)}.'"/"vs/:x}
 
 / user function that attempts to parse anything into a IPv6 GUID
 toaddr:{
