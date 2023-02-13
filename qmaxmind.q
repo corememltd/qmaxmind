@@ -17,16 +17,6 @@ fromcidr:{
   bor:('[0b sv'(or'/)0b vs'';(;)]);
   (frombyte bor[0x00 vs a;frommask[m;count[x]>x?":"]];a:"G"$x;"x"$m:"I"$y)}.'"/"vs/:x}
 
-/ user function that attempts to parse anything into a IPv6 GUID
-toaddr:{
- c:{"G"$"00000000-0000-0000-0000-ffff",raze string x};
- $[-2=t:type x;x;
-  10=t;"G"$first"/"vs x;	/ string (native support since 2017.09.26)
-  4=t;c x;			/ list of byte
-  7=t;c"x"$x;			/ list of int
-  -6=t;c 0x00 vs x;		/ int
-  0Ng]}
-
 files:{l where(l:string key hsym`$x)like y}
 
 nullip:{key[x]!{[v]$[-2=type v;0Ng;-20=type v;key[v]$(neg type value v)$0N;(neg type v)$0N]}each value x}
