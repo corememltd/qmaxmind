@@ -35,7 +35,8 @@ loadasn:{
 loadgeo:{
  t:$[any(string key hsym`$x)like"GeoLite2-City-Blocks-IPv[46].csv";"City";"Country"];
  / https://dev.maxmind.com/geoip/docs/databases/city-and-country?lang=en#csv-databases
- c:("Country";"City")!(`blk`loc!("*IIIBB";"ISSSSSB");`blk`loc!("*IIIBB*EEH";"ISSSSSS*S***SB"));
+ / metro_code is Nielsen DMA codes which ranges from 500 to 881
+ c:("Country";"City")!(`blk`loc!("*IIIBB";"ISSSSSB");`blk`loc!("*IIIBB*EEH";"ISSSSSS*S**HSB"));
  r:{[x;m;f](m;enlist",")0:hsym`$x,"/",f}[x];
  db:raze r[(c t)`blk]each files[x;"GeoLite2-",t,"-Blocks-IPv[46].csv"];
  loc:raze r[(c t)`loc]each files[x;"GeoLite2-",t,"-Locations-*.csv"];
